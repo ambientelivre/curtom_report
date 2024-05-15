@@ -22,7 +22,8 @@ function format_time($t,$f=':') {
 function getTasks($data){
     global $DB;
     $query  = " SELECT  glpi_tickettasks.tickets_id,
-                CONCAT(glpi_users.firstname, ' ', glpi_users.realname)  as requisitante,
+                GROUP_CONCAT(DISTINCT CONCAT(glpi_users.firstname, ' ', glpi_users.realname) SEPARATOR '<br>') as requisitante,
+           CONCAT(tech_users.firstname, ' ', tech_users.realname) as tech,
                 CONCAT(tech_users.firstname, ' ', tech_users.realname)  as tech,
                         glpi_tickets.name                               as sumario,
                         glpi_tickettasks.content                        as descricao,
@@ -40,7 +41,9 @@ function getTasks($data){
                 LEFT JOIN glpi_taskcategories   ON glpi_taskcategories.id           = glpi_tickettasks.taskcategories_id
                 WHERE glpi_tickets_users.type = 1 
                 AND glpi_groups_users.groups_id = ". addslashes($data['idgroup']) ."
-                AND glpi_tickettasks.date BETWEEN '". addslashes($data['_date1']) ." 00:00' AND '". addslashes($data['_date2']) ." 23:59'";
+                AND glpi_tickettasks.date BETWEEN '". addslashes($data['_date1']) ." 00:00' AND '". addslashes($data['_date2']) ." 23:59'
+                GROUP BY glpi_tickettasks.tickets_id, glpi_tickettasks.content, glpi_tickets.name, glpi_taskcategories.completename, glpi_tickettasks.date, glpi_tickettasks.actiontime, tech_users.firstname, tech_users.realname
+";
     if(!$data['garantia']){
         $query .= " AND glpi_tickettasks.taskcategories_id != 2"; //ID da Categoria Garantia
     }
