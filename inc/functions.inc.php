@@ -22,7 +22,7 @@ function format_time($t,$f=':') {
 function getTasks($data){
     global $DB;
     $query  = " SELECT  glpi_tickettasks.tickets_id,
-                GROUP_CONCAT(DISTINCT CONCAT(glpi_users.firstname, ' ', glpi_users.realname) SEPARATOR ', <br>') as requisitante,
+                GROUP_CONCAT(DISTINCT CONCAT(glpi_users.firstname, ' ', glpi_users.realname) SEPARATOR '<br>') as requisitante,
            CONCAT(tech_users.firstname, ' ', tech_users.realname) as tech,
                 CONCAT(tech_users.firstname, ' ', tech_users.realname)  as tech,
                         glpi_tickets.name                               as sumario,
