@@ -26,3 +26,9 @@ This plugins uninstalls as any other GLPI plugin.
 2. Look for the *Custom Report* plugin's row.
 3. Click on the *Uninstall* button.
 4. Delete the `plugins/customreport` directory of your GLPI installation.
+
+New Feature for 3.0 
+--------------
+For future!
+* in this moment No support Groups Requiriments.
+* i18N en.
