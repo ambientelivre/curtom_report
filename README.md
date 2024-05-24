@@ -1,6 +1,10 @@
 # Custom Report for GLPI 
 Allows you to use time posting in tasks to manage hours spent per customer using groups as customer separation.
 
+Requiriments
+------------
+GLPI 9.1.
+
 Installation
 ------------
 
