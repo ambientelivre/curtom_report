@@ -13,6 +13,7 @@ This plugins installs as any other GLPI plugin.
 4. Click on the *Install* button.
 
 Refresh the page and enjoy 
+
 ![image](https://github.com/ambientelivre/custom_report/assets/97977665/3ae71aeb-5b47-4399-8823-88ffee105de8)
 
 
