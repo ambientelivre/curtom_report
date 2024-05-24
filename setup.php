@@ -8,7 +8,7 @@ function plugin_version_customreport() {
         'name'           => "Custom Report",
         'version'        => PLUGIN_CUSTOMREPORT_VERSION,
         'author'         => 'Miguel',
-        'license'        => 'GPL',
+        'license'        => 'GPL-3.0',
         'homepage' 	 => 'https://ambientelivre.com.br',
         'minGlpiVersion' => '9.1'
     ];
