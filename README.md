@@ -1,3 +1,5 @@
+# Custom Report for GLPI 
+
 Installation
 ------------
 
