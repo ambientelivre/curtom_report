@@ -1,14 +1,19 @@
 <?php
-define('GLPI_ROOT', dirname(__FILE__).'/../../..');
+define('GLPI_ROOT', dirname(__FILE__).'/../../../..');
 include (GLPI_ROOT . "/inc/includes.php");
-$DB = new DB();
+$TECH_DB = new DB();
 
-function getGroups(){
-    global $DB;
-    $query = "SELECT * FROM glpi_groups";
+function getTech(){
+    global $TECH_DB;
+    $query = "SELECT users_id_tech,
+    		CONCAT(glpi_users.firstname,' ',glpi_users.realname) as completename
+    		FROM glpi_tickettasks
+    		INNER JOIN glpi_users ON glpi_users.id = glpi_tickettasks.users_id_tech
+    		GROUP BY glpi_tickettasks.users_id_tech
+";
     $list = array();
-    if($result = $DB->query($query)){
-        while($row = $DB->fetch_assoc($result)){
+    if($result = $TECH_DB->query($query)){
+        while($row = $TECH_DB->fetch_assoc($result)){
             $list[] = $row;
         }
     }
@@ -19,11 +24,10 @@ function format_time($t,$f=':') {
   return sprintf("%02d%s%02d", floor($t/3600), $f, ($t/60)%60);
 }
 
-function getTasks($data){
-    global $DB;
+function getTechTasks($data){
+    global $TECH_DB;
     $query  = " SELECT  glpi_tickettasks.tickets_id,
-                GROUP_CONCAT(DISTINCT CONCAT(glpi_users.firstname, ' ', glpi_users.realname) SEPARATOR ',<br>') as requisitante,	
-                CONCAT(tech_users.firstname, ' ', tech_users.realname)  as tech,
+          		CONCAT(glpi_users.firstname, ' ', glpi_users.realname) as tech,
                         glpi_tickets.name                               as sumario,
                         glpi_tickettasks.content                        as descricao,
                         glpi_taskcategories.completename                as categoria,
@@ -34,14 +38,11 @@ function getTasks($data){
                 FROM glpi_tickettasks 
                 INNER JOIN glpi_tickets         ON glpi_tickets.id                  = glpi_tickettasks.tickets_id 
                 INNER JOIN glpi_tickets_users   ON glpi_tickets_users.tickets_id    = glpi_tickettasks.tickets_id 
-                INNER JOIN glpi_groups_users    ON glpi_groups_users.users_id       = glpi_tickets_users.users_id 
-                INNER JOIN glpi_users           ON glpi_users.id                    = glpi_tickets_users.users_id 
-                LEFT JOIN glpi_users as tech_users ON tech_users.id = glpi_tickettasks.users_id_tech
+                LEFT JOIN glpi_users		ON glpi_users.id = glpi_tickettasks.users_id_tech
                 LEFT JOIN glpi_taskcategories   ON glpi_taskcategories.id           = glpi_tickettasks.taskcategories_id
-                WHERE glpi_tickets_users.type = 1 
-                AND glpi_groups_users.groups_id = ". addslashes($data['idgroup']) ."
+                WHERE glpi_tickettasks.users_id_tech = ". addslashes($data['idtech']) ."
                 AND glpi_tickettasks.date BETWEEN '". addslashes($data['_date1']) ." 00:00' AND '". addslashes($data['_date2']) ." 23:59'
-                GROUP BY glpi_tickettasks.tickets_id, glpi_tickettasks.content, glpi_tickets.name, glpi_taskcategories.completename, glpi_tickettasks.date, glpi_tickettasks.actiontime, tech_users.firstname, tech_users.realname
+                GROUP BY glpi_tickettasks.tickets_id, glpi_tickettasks.content, glpi_tickets.name, glpi_taskcategories.completename, glpi_tickettasks.date, glpi_tickettasks.actiontime
 ";
     if(!$data['garantia']){
         $query .= " AND glpi_tickettasks.taskcategories_id != 2"; //ID da Categoria Garantia
@@ -51,8 +52,8 @@ function getTasks($data){
     }
     $query .= " ORDER BY glpi_tickettasks.date ASC";
     $list   = array();
-    if($result = $DB->query($query)){
-        while($row = $DB->fetch_assoc($result)){
+    if($result = $TECH_DB->query($query)){
+        while($row = $TECH_DB->fetch_assoc($result)){
 	    $row['duracao'] = format_time($row['actiontime']);
             $list[] = $row;
         }
@@ -70,15 +71,6 @@ function getTotalHoras($tasks){
         }
     }
     return array('total' => format_time($total), 'semgarantia' => format_time($totalSemGarantia));
-}
-
-function isMyGroup($group){
-    foreach($_SESSION['glpigroups'] as $userGroupID) {
-        if($group['id'] == $userGroupID){
-            return true;
-        }
-    }
-    return false;
 }
 
 function isValidProfile(){
