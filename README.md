@@ -5,6 +5,19 @@ Requirements
 ------------
 GLPI 9.1.
 
+Images
+------------
+Menu
+------------
+![image](https://github.com/ambientelivre/custom_report/assets/97977665/9f20d9c0-81d2-4a9e-a6c0-f8ed919b3840)
+
+Relatório Suporte
+-----------------
+![image](https://github.com/ambientelivre/custom_report/assets/97977665/00d1e702-9e6a-43d6-a00d-2ca732b789d8)
+
+Relatório Técnico
+-----------------
+
 Installation
 ------------
 
