@@ -20,7 +20,7 @@
         <?php foreach($tasks = getTechTasks($data) as $task): ?>
         <tr class="tab_bg_2" align="center">
             <td valign="top"><a target="_blank" href="ticket.form.php?id=<?= $task['tickets_id'] ?>">#<?= $task['tickets_id'] ?></a></td>
-            <td valign="top"><?= $task['tech'] ?></td>
+            <td valign="top"><a target="_blank" href="user.form.php?id=<?= $task['tech_id'] ?>"><?= $task['tech'] ?></a></td>
             <td valign="top"><?= $task['sumario'] ?></td>
             <td valign="top"><div><?= $task['descricao'] ?></div></td>
             <td valign="top"><?= $task['categoria'] ?></td>

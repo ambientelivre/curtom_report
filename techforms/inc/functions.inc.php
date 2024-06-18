@@ -9,7 +9,9 @@ function getTech(){
     		CONCAT(glpi_users.firstname,' ',glpi_users.realname) as completename
     		FROM glpi_tickettasks
     		INNER JOIN glpi_users ON glpi_users.id = glpi_tickettasks.users_id_tech
+    		WHERE glpi_users.is_active = 1
     		GROUP BY glpi_tickettasks.users_id_tech
+    		ORDER BY glpi_users.firstname
 ";
     $list = array();
     if($result = $TECH_DB->query($query)){
@@ -27,6 +29,7 @@ function format_time($t,$f=':') {
 function getTechTasks($data){
     global $TECH_DB;
     $query  = " SELECT  glpi_tickettasks.tickets_id,
+    			glpi_users.id 					as tech_id,
           		CONCAT(glpi_users.firstname, ' ', glpi_users.realname) as tech,
                         glpi_tickets.name                               as sumario,
                         glpi_tickettasks.content                        as descricao,

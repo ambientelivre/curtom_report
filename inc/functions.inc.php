@@ -38,17 +38,23 @@ function getTasks($data){
                 INNER JOIN glpi_users           ON glpi_users.id                    = glpi_tickets_users.users_id 
                 LEFT JOIN glpi_users as tech_users ON tech_users.id = glpi_tickettasks.users_id_tech
                 LEFT JOIN glpi_taskcategories   ON glpi_taskcategories.id           = glpi_tickettasks.taskcategories_id
-                WHERE glpi_tickets_users.type = 1 
+                WHERE glpi_tickets_users.type = 1
                 AND glpi_groups_users.groups_id = ". addslashes($data['idgroup']) ."
-                AND glpi_tickettasks.date BETWEEN '". addslashes($data['_date1']) ." 00:00' AND '". addslashes($data['_date2']) ." 23:59'
-                GROUP BY glpi_tickettasks.tickets_id, glpi_tickettasks.content, glpi_tickets.name, glpi_taskcategories.completename, glpi_tickettasks.date, glpi_tickettasks.actiontime, tech_users.firstname, tech_users.realname
-";
+                AND glpi_tickettasks.date BETWEEN '". addslashes($data['_date1']) ." 00:00' AND '". addslashes($data['_date2']) ." 23:59'";
+	
+    if($data['chamado']){
+	$query .= " AND glpi_tickets.status != 6"; //ID do status fechado do Chamado
+    }
+   
     if(!$data['garantia']){
         $query .= " AND glpi_tickettasks.taskcategories_id != 2"; //ID da Categoria Garantia
     }
     if(!$data['projeto']){
         $query .= " AND glpi_tickettasks.taskcategories_id != 4"; //ID da Categoria Projeto
     }
+    
+    $query .= " GROUP BY glpi_tickettasks.tickets_id, glpi_tickettasks.content, glpi_tickets.name, glpi_taskcategories.completename, glpi_tickettasks.date, glpi_tickettasks.actiontime, tech_users.firstname, tech_users.realname";
+    
     $query .= " ORDER BY glpi_tickettasks.date ASC";
     $list   = array();
     if($result = $DB->query($query)){

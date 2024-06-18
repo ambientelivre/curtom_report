@@ -10,6 +10,10 @@ switch($_REQUEST['opt']){
         include_once 'forms/report.form.php';
         break;
     default:
-        include_once 'forms/menu.form.php';
+    	if(isValidProfile()){
+	include_once 'forms/adminmenu.form.php';
+	} else {
+	include_once 'forms/menu.form.php';
+	}
         break;
 }
